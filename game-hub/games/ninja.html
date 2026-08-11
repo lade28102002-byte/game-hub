@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ninja Jump - GameZone</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #090b14;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .top-bar {
+            height: 70px;
+            padding: 0 6%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            background: #10121d;
+            border-bottom: 1px solid #292d3c;
+        }
+
+        .logo {
+            color: white;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+        .logo span {
+            color: #a855f7;
+        }
+
+        .back-button {
+            padding: 10px 18px;
+
+            background: #1b1e2b;
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+
+            font-size: 13px;
+        }
+
+        .back-button:hover {
+            background: #a855f7;
+        }
+
+        .game-wrapper {
+            width: 100%;
+            max-width: 1000px;
+
+            margin: auto;
+
+            padding: 30px 20px;
+        }
+
+        .game-header {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 18px;
+        }
+
+        .game-header h1 {
+            font-size: 28px;
+        }
+
+        .game-header p {
+            margin-top: 5px;
+
+            color: #838898;
+
+            font-size: 13px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 10px;
+        }
+
+        .stat-box {
+            min-width: 95px;
+
+            padding: 10px 15px;
+
+            background: #131622;
+
+            border: 1px solid #2b3040;
+
+            border-radius: 7px;
+
+            text-align: center;
+        }
+
+        .stat-box small {
+            display: block;
+
+            color: #777d8d;
+
+            font-size: 10px;
+
+            margin-bottom: 4px;
+        }
+
+        .stat-box span {
+            color: #a855f7;
+
+            font-size: 17px;
+
+            font-weight: bold;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+
+            width: 100%;
+
+            overflow: hidden;
+
+            border: 2px solid #2b3040;
+
+            border-radius: 10px;
+
+            background: #080a12;
+        }
+
+        canvas {
+            display: block;
+
+            width: 100%;
+
+            height: auto;
+        }
+
+        .start-screen {
+            position: absolute;
+
+            inset: 0;
+
+            z-index: 10;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+
+            background: rgba(7, 8, 15, 0.84);
+        }
+
+        .start-screen h2 {
+            color: #a855f7;
+
+            font-size: 40px;
+
+            margin-bottom: 12px;
+        }
+
+        .start-screen p {
+            color: #adb0bd;
+
+            line-height: 1.7;
+
+            margin-bottom: 25px;
+        }
+
+        .start-button {
+            padding: 13px 28px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background: #a855f7;
+
+            color: white;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .start-button:hover {
+            background: #b96df9;
+        }
+
+        .controls {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 20px;
+
+            flex-wrap: wrap;
+
+            margin-top: 18px;
+
+            color: #777c8c;
+
+            font-size: 13px;
+        }
+
+        .key {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            margin: 0 2px;
+
+            background: #171a27;
+
+            border: 1px solid #2c3141;
+
+            border-radius: 4px;
+
+            color: white;
+        }
+
+        @media (max-width: 700px) {
+
+            .game-header {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            .stats {
+                width: 100%;
+            }
+
+            .stat-box {
+                flex: 1;
+            }
+
+            .start-screen h2 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="top-bar">
+
+    <a href="../index.html" class="logo">
+        <span>GAME</span>ZONE
+    </a>
+
+    <a href="../index.html" class="back-button">
+        ← Quay lại
+    </a>
+
+</header>
+
+
+<main class="game-wrapper">
+
+    <div class="game-header">
+
+        <div>
+            <h1>🥷 Ninja Jump</h1>
+
+            <p>
+                Nhảy qua chướng ngại vật và thu thập càng nhiều xu càng tốt.
+            </p>
+        </div>
+
+        <div class="stats">
+
+            <div class="stat-box">
+
+                <small>SCORE</small>
+
+                <span id="score">
+                    0
+                </span>
+
+            </div>
+
+            <div class="stat-box">
+
+                <small>COINS</small>
+
+                <span id="coins">
+                    0
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="canvas-wrapper">
+
+        <canvas
+            id="gameCanvas"
+            width="1000"
+            height="550">
+        </canvas>
+
+
+        <div
+            class="start-screen"
+            id="startScreen">
+
+            <h2>NINJA JUMP</h2>
+
+            <p>
+                Nhấn SPACE hoặc phím ↑ để nhảy.<br>
+                Bạn có thể nhấn giữ để nhảy cao hơn.
+            </p>
+
+            <button
+                class="start-button"
+                id="startButton">
+
+                BẮT ĐẦU CHƠI
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="controls">
+
+        <span>
+            <span class="key">SPACE</span>
+            Nhảy
+        </span>
+
+        <span>
+            <span class="key">↑</span>
+            Nhảy
+        </span>
+
+    </div>
+
+</main>
+
+
+<script src="ninja.js"></script>
+
+</body>
+</html>
