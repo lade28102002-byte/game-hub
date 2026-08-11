@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Flappy Bird - GameZone</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #090b12;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .top-bar {
+            height: 70px;
+            padding: 0 6%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            background: #11141d;
+            border-bottom: 1px solid #292e3b;
+        }
+
+        .logo {
+            color: white;
+            text-decoration: none;
+
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+        .logo span {
+            color: #ffd23f;
+        }
+
+        .back-button {
+            padding: 10px 18px;
+
+            background: #1a1e28;
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+
+            font-size: 13px;
+        }
+
+        .back-button:hover {
+            background: #ffd23f;
+            color: #111;
+        }
+
+        .game-wrapper {
+            width: 100%;
+            max-width: 900px;
+
+            margin: auto;
+
+            padding: 30px 20px;
+        }
+
+        .game-header {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 18px;
+        }
+
+        .game-header h1 {
+            font-size: 28px;
+        }
+
+        .game-header p {
+            margin-top: 5px;
+
+            color: #858b99;
+
+            font-size: 13px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 10px;
+        }
+
+        .stat-box {
+            min-width: 90px;
+
+            padding: 10px 15px;
+
+            background: #141821;
+
+            border: 1px solid #2a303e;
+
+            border-radius: 7px;
+
+            text-align: center;
+        }
+
+        .stat-box small {
+            display: block;
+
+            color: #777e8d;
+
+            font-size: 10px;
+
+            margin-bottom: 4px;
+        }
+
+        .stat-box span {
+            color: #ffd23f;
+
+            font-size: 17px;
+
+            font-weight: bold;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+
+            width: 100%;
+
+            max-width: 800px;
+
+            margin: auto;
+
+            overflow: hidden;
+
+            border: 2px solid #2a303e;
+
+            border-radius: 10px;
+
+            background: #72c7e8;
+        }
+
+        canvas {
+            display: block;
+
+            width: 100%;
+
+            height: auto;
+        }
+
+        .start-screen {
+            position: absolute;
+
+            inset: 0;
+
+            z-index: 10;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+
+            background: rgba(7, 10, 15, 0.72);
+        }
+
+        .start-screen h2 {
+            color: #ffd23f;
+
+            font-size: 40px;
+
+            margin-bottom: 12px;
+        }
+
+        .start-screen p {
+            color: #e0e3e8;
+
+            line-height: 1.7;
+
+            margin-bottom: 25px;
+        }
+
+        .start-button {
+            padding: 13px 28px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background: #ffd23f;
+
+            color: #111;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .start-button:hover {
+            background: #ffe477;
+        }
+
+        .controls {
+            margin-top: 18px;
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 20px;
+
+            flex-wrap: wrap;
+
+            color: #777d89;
+
+            font-size: 13px;
+        }
+
+        .key {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            margin: 0 2px;
+
+            background: #171a23;
+
+            border: 1px solid #2c313d;
+
+            border-radius: 4px;
+
+            color: white;
+        }
+
+        @media (max-width: 700px) {
+
+            .game-header {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            .stats {
+                width: 100%;
+            }
+
+            .stat-box {
+                flex: 1;
+            }
+
+            .start-screen h2 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="top-bar">
+
+    <a href="../index.html" class="logo">
+        <span>GAME</span>ZONE
+    </a>
+
+    <a href="../index.html" class="back-button">
+        ← Quay lại
+    </a>
+
+</header>
+
+
+<main class="game-wrapper">
+
+    <div class="game-header">
+
+        <div>
+
+            <h1>🐦 Flappy Bird</h1>
+
+            <p>
+                Điều khiển chú chim vượt qua các ống nước.
+            </p>
+
+        </div>
+
+
+        <div class="stats">
+
+            <div class="stat-box">
+
+                <small>SCORE</small>
+
+                <span id="score">
+                    0
+                </span>
+
+            </div>
+
+
+            <div class="stat-box">
+
+                <small>BEST</small>
+
+                <span id="best">
+                    0
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="canvas-wrapper">
+
+        <canvas
+            id="gameCanvas"
+            width="800"
+            height="600">
+        </canvas>
+
+
+        <div
+            class="start-screen"
+            id="startScreen">
+
+            <h2>FLAPPY BIRD</h2>
+
+            <p>
+                Nhấn SPACE hoặc click chuột để chim bay lên.<br>
+                Vượt qua càng nhiều ống càng tốt.
+            </p>
+
+            <button
+                class="start-button"
+                id="startButton">
+
+                BẮT ĐẦU CHƠI
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="controls">
+
+        <span>
+            <span class="key">SPACE</span>
+            Bay lên
+        </span>
+
+        <span>
+            <span class="key">CLICK</span>
+            Bay lên
+        </span>
+
+    </div>
+
+</main>
+
+
+<script src="flappy.js"></script>
+
+</body>
+</html>
